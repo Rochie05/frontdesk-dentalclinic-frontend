@@ -1,7 +1,7 @@
 import { useRef, useCallback } from 'react'
 
 export const useSound = (soundFile: string) => {
-  const audioRef = useRef<HTMLAudioElement>()
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   const play = useCallback(() => {
     if (!audioRef.current) {
