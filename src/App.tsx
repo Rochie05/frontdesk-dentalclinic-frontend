@@ -1,15 +1,10 @@
-import { Button } from "@chakra-ui/react"
+import { BrowserRouter } from "react-router-dom"
+import AppRoutes from "./routes/routes"
 
-
-function App() {
-
-
+export default function App() {
   return (
-    <>
-      <Button>ChakraUI Working</Button>
-
-    </>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   )
 }
-
-export default App
