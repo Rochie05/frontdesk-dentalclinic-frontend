@@ -12,6 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '@/contexts/UserContext'
 import { toaster } from '@/components/ui/toaster'
+import { AuthenticationError } from '@/apis/authService'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -19,7 +20,7 @@ export default function LoginForm() {
   const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const { login } = useUser()
+  const { login, user } = useUser()
   const navigate = useNavigate()
 
   // Load saved credentials if remember me was checked
@@ -51,9 +52,8 @@ export default function LoginForm() {
     setIsLoading(true)
 
     try {
-      // For demo purposes, we'll use 'receptionist' as default role
-      // In a real app, you might want to add role selection
-      const success = await login(email, password, 'receptionist')
+      // Call the updated login function without role parameter
+      const success = await login(email, password)
 
       if (success) {
         // Save credentials if remember me is checked
@@ -75,7 +75,15 @@ export default function LoginForm() {
           duration: 3000
         })
 
-        navigate('/dashboard/receptionist')
+        // Navigate based on user role
+        const userRole = user?.role || 'guest'
+        if (userRole === 'receptionist') {
+          navigate('/dashboard/receptionist')
+        } else if (userRole === 'cashier') {
+          navigate('/dashboard/cashier')
+        } else {
+          navigate('/dashboard')
+        }
       } else {
         toaster.create({
           title: "Login Failed",
@@ -85,9 +93,15 @@ export default function LoginForm() {
         })
       }
     } catch (error) {
+      let errorMessage = "An error occurred during login. Please try again."
+      
+      if (error instanceof AuthenticationError) {
+        errorMessage = error.message
+      }
+      
       toaster.create({
         title: "Login Error",
-        description: "An error occurred during login. Please try again.",
+        description: errorMessage,
         type: "error",
         duration: 3000
       })
@@ -159,7 +173,7 @@ export default function LoginForm() {
 
       <Card.Footer>
         <Text fontSize="xs" color="gray.600">
-          Demo: email: "receptionist@clinic.com", password: "receptionist123"
+          Demo: Use your Supabase credentials or create an account
         </Text>
       </Card.Footer>
     </Card.Root>
