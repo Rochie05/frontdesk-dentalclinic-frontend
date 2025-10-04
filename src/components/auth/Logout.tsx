@@ -102,8 +102,8 @@ export default function Logout({ size = "sm", variant = "outline", fullWidth = f
     <DialogRoot 
       open={isOpen} 
       onOpenChange={(e) => setIsOpen(e.open)}
-      placement="center"
-      motionPreset="scale"
+      placement="top"
+      motionPreset="slide-in-top"
     >
       <DialogTrigger asChild>
         <Button
@@ -121,7 +121,10 @@ export default function Logout({ size = "sm", variant = "outline", fullWidth = f
 
       <Portal>
         <DialogBackdrop />
-        <DialogContent>
+        <DialogContent
+          mt={4}
+          maxW="md"
+        >
           <DialogHeader>
             <DialogTitle>Verify Your Identity</DialogTitle>
             <DialogCloseTrigger />

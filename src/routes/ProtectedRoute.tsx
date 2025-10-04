@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useUser } from '@/contexts/UserContext'
 import type { UserRole } from '@/types/auth'
 import type { ReactNode } from 'react'
+import { Box, Spinner } from '@chakra-ui/react'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -17,6 +18,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const { canAccess, isAuthenticated, user } = useUser()
   const location = useLocation()
+
+  // Show loading spinner while checking authentication
+  if (user === null) {
+    return (
+      <Box display="flex" alignItems="center" justifyContent="center" h="100vh">
+        <Spinner size="xl" color="teal.300" />
+      </Box>
+    )
+  }
 
   // If not authenticated and trying to access protected content, redirect to login
   if (!isAuthenticated && requiredRole !== 'guest') {
