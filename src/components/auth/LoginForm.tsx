@@ -1,52 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Input,
   VStack,
   Text,
-  Card,
-  Switch,
-  HStack,
-  Field
+  Field,
+  Box
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '@/contexts/UserContext'
 import { toaster } from '@/components/ui/toaster'
 import { AuthenticationError } from '@/apis/authService'
-import { secureStorage, SecureStorageKeys } from '@/utils/secureStorage'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const { login } = useUser()
   const navigate = useNavigate()
 
-  // Load saved credentials from secure storage if remember me was checked
-  useEffect(() => {
-    const loadRememberMe = async () => {
-      try {
-        const savedRememberMe = await secureStorage.getItem(SecureStorageKeys.REMEMBER_ME)
-        
-        if (savedRememberMe === 'true') {
-          const savedEmail = await secureStorage.getItem(SecureStorageKeys.SAVED_EMAIL)
-          const savedPassword = await secureStorage.getItem(SecureStorageKeys.SAVED_PASSWORD)
-          
-          if (savedEmail && savedPassword) {
-            setEmail(savedEmail)
-            setPassword(savedPassword)
-            setRememberMe(true)
-          }
-        }
-      } catch (error) {
-        console.error('Error loading remember me data:', error)
-      }
-    }
-
-    loadRememberMe()
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,17 +41,7 @@ export default function LoginForm() {
       const loggedInUser = await login(email, password)
 
       if (loggedInUser) {
-        // Save credentials securely if remember me is checked
-        if (rememberMe) {
-          await secureStorage.setItem(SecureStorageKeys.SAVED_EMAIL, email)
-          await secureStorage.setItem(SecureStorageKeys.SAVED_PASSWORD, password)
-          await secureStorage.setItem(SecureStorageKeys.REMEMBER_ME, 'true')
-        } else {
-          // Clear saved credentials from secure storage
-          secureStorage.removeItem(SecureStorageKeys.SAVED_EMAIL)
-          secureStorage.removeItem(SecureStorageKeys.SAVED_PASSWORD)
-          secureStorage.removeItem(SecureStorageKeys.REMEMBER_ME)
-        }
+    
 
         toaster.create({
           title: "Login Successful",
@@ -135,71 +98,97 @@ export default function LoginForm() {
   }
 
   return (
-    <Card.Root maxW="400px" mx="auto" mt={8}>
-      <Card.Header>
-        <Card.Title>Front Desk Login</Card.Title>
-        <Card.Description>
-          Enter your email and password to sign in
-        </Card.Description>
-      </Card.Header>
+    <Box
 
-      <Card.Body>
+      p={8}
+      borderRadius="xl"
+      boxShadow="sm"
+      w="full"
+    >
+      <VStack gap={8} align="stretch" w="full">
+        {/* Title */}
+        <VStack gap={2} align="start">
+          <Text
+            fontSize="32px"
+            fontWeight="bold"
+            color="teal.300"
+            lineHeight="1.3"
+          >
+            Front Desk Login
+          </Text>
+          <Text
+            fontSize="14px"
+            color="gray.400"
+            lineHeight="1.4"
+          >
+            Enter your email and password to sign in
+          </Text>
+        </VStack>
+
+        {/* Form */}
         <form onSubmit={handleSubmit}>
-          <VStack gap={4}>
+          <VStack gap={6} align="stretch">
+            {/* Email Field */}
             <Field.Root>
-              <Field.Label>Email</Field.Label>
+              <Field.Label fontSize="14px" color="gray.700">
+                Email
+              </Field.Label>
               <Input
                 type="email"
-                placeholder="Enter email"
+                placeholder="Your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                autoComplete={rememberMe ? "email" : "off"}
+                autoComplete="off"
+                h="50px"
+                borderRadius="15px"
+    
+                borderWidth="1px"
+      
+                _placeholder={{ color: "gray.400" }}
               />
             </Field.Root>
 
+            {/* Password Field */}
             <Field.Root>
-              <Field.Label>Password</Field.Label>
+              <Field.Label fontSize="14px" color="gray.700">
+                Password
+              </Field.Label>
               <Input
                 type="password"
-                placeholder="Enter password"
+                placeholder="Your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoComplete={rememberMe ? "current-password" : "off"}
+                autoComplete="off"
+                h="50px"
+                borderRadius="15px"
+       
+                borderWidth="1px"
+ 
+                _placeholder={{ color: "gray.400" }}
               />
             </Field.Root>
 
-            <HStack justify="space-between" w="full">
-              <Text fontSize="sm">Remember me</Text>
-              <Switch.Root
-                checked={rememberMe}
-                onCheckedChange={(e) => setRememberMe(e.checked)}
-           
-              >
-                <Switch.HiddenInput />
-                <Switch.Control>
-                  <Switch.Thumb />
-                </Switch.Control>
-              </Switch.Root>
-            </HStack>
+ 
 
+            {/* Sign In Button */}
             <Button
               type="submit"
-           
               width="full"
+              h="45px"
+              color="white"
+              borderRadius="12px"
+              fontSize="10px"
+              fontWeight="bold"
+              letterSpacing="wide"
               loading={isLoading}
-              loadingText="Logging in..."
+              loadingText="SIGNING IN..."
+ 
             >
-              Login
+              SIGN IN
             </Button>
           </VStack>
         </form>
-      </Card.Body>
-
-      <Card.Footer>
-        <Text fontSize="xs" color="gray.600">
-          Demo: Use your Supabase credentials or create an account
-        </Text>
-      </Card.Footer>
-    </Card.Root>
+      </VStack>
+    </Box>
   )
 }

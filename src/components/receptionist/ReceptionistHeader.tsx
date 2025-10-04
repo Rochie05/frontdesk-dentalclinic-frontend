@@ -1,18 +1,24 @@
 import { Box, HStack, Text, Icon, Badge } from '@chakra-ui/react'
 import { AiFillBell } from 'react-icons/ai'
-import { BsInfoCircle } from 'react-icons/bs'
 import { ColorModeButton } from '@/components/ui/color-mode'
+import { useLocation } from 'react-router-dom'
 
-interface ToastNotification {
-  patientName: string
-  timeInfo: string
+
+
+
+// Helper function to get page name from path
+const getPageName = (pathname: string): string => {
+  if (pathname.includes('/dashboard')) return 'Dashboard'
+  if (pathname.includes('/appointments-list')) return 'Appointments List'
+  if (pathname.includes('/follow-up')) return 'Follow Up Appointments'
+  if (pathname.includes('/cancel-requests')) return 'Cancel Requests'
+  return 'Dashboard'
 }
 
-interface ReceptionistHeaderProps {
-  notification?: ToastNotification
-}
+export default function ReceptionistHeader() {
+  const location = useLocation()
+  const pageName = getPageName(location.pathname)
 
-export default function ReceptionistHeader({ notification }: ReceptionistHeaderProps) {
   return (
     <HStack 
       w="full" 
@@ -24,36 +30,16 @@ export default function ReceptionistHeader({ notification }: ReceptionistHeaderP
       {/* Breadcrumb Navigation */}
       <Text fontSize="md" fontWeight="medium">
         <Text as="span" color="gray.400">Pages </Text>
-        <Text as="span" color="gray.700"> / Dashboard</Text>
+        <Text as="span" color="gray.700"> / {pageName}</Text>
       </Text>
 
       {/* Right Section: Notification Toast + Bell Icon + Dark Mode */}
       <HStack gap={6} align="center">
-        {/* Toast Notification */}
-        {notification && (
-          <HStack
-            bg="teal.100"
-            px={4}
-            py={3}
-            borderRadius="md"
-            shadow="md"
-            gap={3}
-          >
-            <Icon as={BsInfoCircle} boxSize={5} color="gray.700" />
-            <HStack gap={1.5}>
-              <Text fontSize="sm" fontWeight="semibold" color="black">
-                {notification.patientName}
-              </Text>
-              <Text fontSize="sm" fontWeight="normal" color="black">
-                {notification.timeInfo}
-              </Text>
-            </HStack>
-          </HStack>
-        )}
+     
 
         {/* Bell Icon for Notifications */}
         <Box position="relative" cursor="pointer">
-          <Icon as={AiFillBell} boxSize={9} color="gray.600" />
+          <Icon as={AiFillBell} boxSize={7} color="gray.600" />
           {/* Optional notification badge */}
           <Badge
             position="absolute"

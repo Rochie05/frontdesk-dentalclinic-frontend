@@ -10,16 +10,11 @@ export default function Receptionist() {
       <Sidebar />
 
       {/* Main Content Area */}
-      <Box flex="1" overflow="auto" bg="bg">
+      <Box flex="1" overflow="auto" bg="bg.muted">
         <VStack align="stretch" gap={0} h="full">
           {/* Header */}
-          <Box position="sticky" top={0} zIndex={10} bg="bg">
-            <ReceptionistHeader 
-              notification={{
-                patientName: "Patient Yu, Errol",
-                timeInfo: "schedule at 15 mins"
-              }}
-            />
+          <Box position="sticky" top={0} zIndex={10} >
+            <ReceptionistHeader/>
           </Box>
 
           {/* Content Area with Padding */}
@@ -28,16 +23,16 @@ export default function Receptionist() {
               {/* Stats Cards Row */}
               <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={6}>
                 {/* Placeholder for stat cards */}
-                <Box bg="bg.panel" p={6} borderRadius="15px" h="153px">
+                <Box bg="bg" p={6} borderRadius="15px" h="153px">
                   {/* Total Appointments Card */}
                 </Box>
-                <Box bg="bg.panel" p={6} borderRadius="15px" h="153px">
+                <Box bg="bg" p={6} borderRadius="15px" h="153px">
                   {/* Total Appointments Completed Card */}
                 </Box>
-                <Box bg="bg.panel" p={6} borderRadius="15px" h="153px">
+                <Box bg="bg" p={6} borderRadius="15px" h="153px">
                   {/* Total Appointments For Approval Card */}
                 </Box>
-                <Box bg="bg.panel" p={6} borderRadius="15px" h="153px">
+                <Box bg="bg" p={6} borderRadius="15px" h="153px">
                   {/* Cancelled Appointments Card */}
                 </Box>
               </SimpleGrid>
@@ -46,7 +41,7 @@ export default function Receptionist() {
               <Flex gap={6} direction={{ base: 'column', xl: 'row' }}>
                 {/* Calendar Section - Left */}
                 <Box 
-                  bg="bg.panel" 
+                  bg="bg" 
                   p={6} 
                   borderRadius="15px" 
                   flex="0 0 733px"
@@ -57,7 +52,7 @@ export default function Receptionist() {
 
                 {/* Appointments Today Section - Right */}
                 <Box 
-                  bg="bg.panel" 
+                  bg="bg" 
                   p={6} 
                   borderRadius="15px" 
                   flex="1"
