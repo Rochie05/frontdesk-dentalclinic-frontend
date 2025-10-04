@@ -15,9 +15,16 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
   const { isAuthenticated, user } = useUser()
 
   // If user is authenticated, redirect to appropriate dashboard
-  if (isAuthenticated && user) {
+  if (isAuthenticated && user && user.role) {
     const dashboardPath = redirectTo || `/dashboard/${user.role}`
     return <Navigate to={dashboardPath} replace />
+  }
+
+  // If authenticated but role is not set, don't redirect yet (data still loading)
+  if (isAuthenticated && user && !user.role) {
+    console.warn('User is authenticated but role is not set yet')
+    // Show loading or stay on current page until role is loaded
+    return <>{children}</>
   }
 
   // If not authenticated, show the public content (login page)

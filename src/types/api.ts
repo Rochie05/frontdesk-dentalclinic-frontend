@@ -9,11 +9,19 @@ export interface LoginResponse {
   user: {
     id: string
     email: string
-    role: string
+    roles: string[]
+    staff_info: {
+      staff_id: number
+      last_name: string
+      first_name: string
+      contact_number: string
+      email: string
+      staff_image_url: string | null
+      role_id: number
+      role_name: string
+    }
+    display_name: string
     email_verified: boolean
-    created_at: string
-    user_metadata: Record<string, any>
-    app_metadata: Record<string, any>
   }
   expires_in: number
   token_type: string

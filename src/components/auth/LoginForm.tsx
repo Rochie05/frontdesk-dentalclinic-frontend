@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '@/contexts/UserContext'
 import { toaster } from '@/components/ui/toaster'
 import { AuthenticationError } from '@/apis/authService'
+import { secureStorage, SecureStorageKeys } from '@/utils/secureStorage'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -20,20 +21,31 @@ export default function LoginForm() {
   const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const { login, user } = useUser()
+  const { login } = useUser()
   const navigate = useNavigate()
 
-  // Load saved credentials if remember me was checked
+  // Load saved credentials from secure storage if remember me was checked
   useEffect(() => {
-    const savedEmail = localStorage.getItem('savedEmail')
-    const savedPassword = localStorage.getItem('savedPassword')
-    const savedRememberMe = localStorage.getItem('rememberMe') === 'true'
-
-    if (savedRememberMe && savedEmail && savedPassword) {
-      setEmail(savedEmail)
-      setPassword(savedPassword)
-      setRememberMe(true)
+    const loadRememberMe = async () => {
+      try {
+        const savedRememberMe = await secureStorage.getItem(SecureStorageKeys.REMEMBER_ME)
+        
+        if (savedRememberMe === 'true') {
+          const savedEmail = await secureStorage.getItem(SecureStorageKeys.SAVED_EMAIL)
+          const savedPassword = await secureStorage.getItem(SecureStorageKeys.SAVED_PASSWORD)
+          
+          if (savedEmail && savedPassword) {
+            setEmail(savedEmail)
+            setPassword(savedPassword)
+            setRememberMe(true)
+          }
+        }
+      } catch (error) {
+        console.error('Error loading remember me data:', error)
+      }
     }
+
+    loadRememberMe()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,36 +64,48 @@ export default function LoginForm() {
     setIsLoading(true)
 
     try {
-      // Call the updated login function without role parameter
-      const success = await login(email, password)
+      // Call the login function
+      const loggedInUser = await login(email, password)
 
-      if (success) {
-        // Save credentials if remember me is checked
+      if (loggedInUser) {
+        // Save credentials securely if remember me is checked
         if (rememberMe) {
-          localStorage.setItem('savedEmail', email)
-          localStorage.setItem('savedPassword', password)
-          localStorage.setItem('rememberMe', 'true')
+          await secureStorage.setItem(SecureStorageKeys.SAVED_EMAIL, email)
+          await secureStorage.setItem(SecureStorageKeys.SAVED_PASSWORD, password)
+          await secureStorage.setItem(SecureStorageKeys.REMEMBER_ME, 'true')
         } else {
-          // Clear saved credentials
-          localStorage.removeItem('savedEmail')
-          localStorage.removeItem('savedPassword')
-          localStorage.removeItem('rememberMe')
+          // Clear saved credentials from secure storage
+          secureStorage.removeItem(SecureStorageKeys.SAVED_EMAIL)
+          secureStorage.removeItem(SecureStorageKeys.SAVED_PASSWORD)
+          secureStorage.removeItem(SecureStorageKeys.REMEMBER_ME)
         }
 
         toaster.create({
           title: "Login Successful",
-          description: `Welcome back!`,
+          description: `Welcome back, ${loggedInUser.displayName || loggedInUser.email}!`,
           type: "success",
           duration: 3000
         })
 
-        // Navigate based on user role
-        const userRole = user?.role || 'guest'
-        if (userRole === 'receptionist') {
+        // Navigate based on user role from the login response
+        // Validate role before navigation
+        if (!loggedInUser.role) {
+          console.error('User role is undefined after login')
+          toaster.create({
+            title: "Login Error",
+            description: "User role is not properly set. Please try again.",
+            type: "error",
+            duration: 3000
+          })
+          return
+        }
+        
+        if (loggedInUser.role === 'receptionist') {
           navigate('/dashboard/receptionist')
-        } else if (userRole === 'cashier') {
+        } else if (loggedInUser.role === 'cashier') {
           navigate('/dashboard/cashier')
         } else {
+          // Fallback to default dashboard
           navigate('/dashboard')
         }
       } else {
