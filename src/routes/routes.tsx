@@ -11,7 +11,9 @@ import CancelRequests from "@/pages/receptionist/CancelRequests"
 
 import Cashier from "@/pages/cashier/CashierDashboard"
 import PaymentsList from "@/pages/cashier/PaymentsList"
+import PaymentDetail from "@/pages/cashier/PaymentDetail"
 import AppointmentRefunds from "@/pages/cashier/AppointmentRefunds"
+import RefundDetail from "@/pages/cashier/RefundDetail"
 
 import { ProtectedRoute } from "./ProtectedRoute"
 import { PublicRoute } from "./PublicRoute"
@@ -84,12 +86,32 @@ export default function AppRoutes() {
         }
       />
       
+      {/* Payment Detail - accessible by cashier */}
+      <Route 
+        path="/payments-list/:id" 
+        element={
+          <ProtectedRoute requiredRole="cashier">
+            <PaymentDetail />
+          </ProtectedRoute>
+        }
+      />
+      
       {/* Appointment Refunds - accessible by cashier */}
       <Route 
         path="/appointment-refunds" 
         element={
           <ProtectedRoute requiredRole="cashier">
             <AppointmentRefunds />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Refund Detail - accessible by cashier */}
+      <Route 
+        path="/appointment-refunds/:id" 
+        element={
+          <ProtectedRoute requiredRole="cashier">
+            <RefundDetail />
           </ProtectedRoute>
         }
       />

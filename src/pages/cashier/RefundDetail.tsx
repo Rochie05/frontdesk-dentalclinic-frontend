@@ -1,9 +1,9 @@
-import { Flex, Box, Text } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 import Sidebar from '@/components/dashboard/Sidebar'
 import CashierHeader from '@/components/cashier/CashierHeader'
-import AppointmentrRefundsTable from '@/components/cashier/AppointmentsRefundsTable'
+import RefundForm from '@/components/cashier/RefundForm'
 
-export default function AppointmentRefunds() {
+export default function RefundDetail() {
   return (
     <Flex h="100vh" overflow="hidden">
       {/* Sidebar */}
@@ -18,7 +18,7 @@ export default function AppointmentRefunds() {
         
         {/* Content Area */}
         <Box flex={1} overflow="auto" p={6} bg="bg.muted">
-        <AppointmentrRefundsTable/>
+          <RefundForm />
         </Box>
       </Flex>
     </Flex>
