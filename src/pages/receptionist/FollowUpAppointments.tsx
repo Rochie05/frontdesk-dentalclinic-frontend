@@ -1,5 +1,6 @@
 import { Box, Flex, VStack, Text, HStack, Image, Badge, Input, Button } from '@chakra-ui/react'
 import { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ReceptionistTable from '@/components/receptionist/ReceptionistTable'
 import type { Column } from '@/components/receptionist/ReceptionistTable'
 import Sidebar from '@/components/dashboard/Sidebar'
@@ -11,6 +12,7 @@ import CashierHeader from '@/components/cashier/CashierHeader'
 export default function CancelledAppointments() {
   const { user } = useUser()
   const isReceptionist = user?.role === 'receptionist'
+  const navigate = useNavigate()
 
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest' | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -91,7 +93,12 @@ export default function CancelledAppointments() {
       key: 'action',
       label: 'Action',
       render: (appt) => (
-        <Text color="blue.500" cursor="pointer" fontWeight="bold">
+        <Text
+          color="blue.500"
+          cursor="pointer"
+          fontWeight="bold"
+          onClick={() => navigate('/follow-up/appointment', { state: appt })}
+        >
           View
         </Text>
       ),

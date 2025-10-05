@@ -1,6 +1,7 @@
 import { Flex, Box, VStack, HStack, Text, Input, Badge, Button } from '@chakra-ui/react'
 // removed unused ComponentType import
 import { useState, useRef, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import Sidebar from '@/components/dashboard/Sidebar'
 import CashierHeader from '@/components/cashier/CashierHeader'
 import ReceptionistHeader from '@/components/receptionist/ReceptionistHeader'
@@ -9,6 +10,25 @@ import { useUser } from '@/contexts/UserContext'
 export default function Appointment() {
   const { user } = useUser()
   const isReceptionist = user?.role === 'receptionist'
+  const location = useLocation()
+  const appt = (location.state ?? {}) as any
+  const _parts = (appt.name ?? '').split(' ')
+  const firstName = appt.firstName ?? _parts.shift() ?? ''
+  const lastName = appt.lastName ?? _parts.join(' ') ?? ''
+  const middleName = appt.middleName ?? ''
+  const suffix = appt.suffix ?? ''
+  const birthday = appt.birthday ?? ''
+  const gender = appt.gender ?? ''
+  const contactNumber = appt.contactNumber ?? appt.phone ?? ''
+  const address = appt.address ?? ''
+  const email = appt.email ?? appt.emailAddress ?? ''
+  const emergencyContactName = appt.emergencyContactName ?? ''
+  const emergencyRelationship = appt.emergencyRelationship ?? ''
+  const emergencyContactNumber = appt.emergencyContactNumber ?? ''
+  const appointmentDate = appt.appointmentDate ?? appt.time ?? ''
+  const appointmentTime = appt.appointmentTime ?? appt.slot ?? ''
+  const doctor = appt.doctor ?? ''
+  const services = Array.isArray(appt.services) ? appt.services : (appt.services ? [appt.services] : [])
 
   // Replace Select with custom dropdown
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -46,62 +66,62 @@ export default function Appointment() {
             {/* Left Column: Patient Info */}
             <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4} borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.900', borderColor: 'gray.600' }}>
               <Text fontSize="lg" fontWeight="bold">Patient Information</Text>
-              <HStack gap={3}>
+                  <HStack gap={3}>
                 <VStack align="start" gap={2} flex="1">
                   <Text fontSize="sm">First Name</Text>
-                  <Input value="Juan" />
+                  <Input value={firstName} readOnly />
                 </VStack>
                 <VStack align="start" gap={2} flex="1">
                   <Text fontSize="sm">Middle Name</Text>
-                  <Input value="Pedro" />
+                  <Input value={middleName} readOnly />
                 </VStack>
               </HStack>
 
               <HStack gap={3}>
                 <VStack align="start" gap={2} flex="1">
                   <Text fontSize="sm">Last Name</Text>
-                  <Input value="Dela Cruz" />
+                  <Input value={lastName} readOnly />
                 </VStack>
                 <VStack align="start" gap={2} flex="1">
                   <Text fontSize="sm">Suffix</Text>
-                  <Input value="Jr." />
+                  <Input value={suffix} readOnly />
                 </VStack>
               </HStack>
 
               <HStack gap={3}>
                 <VStack align="start" gap={2} flex="1">
                   <Text fontSize="sm">Birthday</Text>
-                  <Input value="May 9, 2005" />
+                  <Input value={birthday} readOnly />
                 </VStack>
                 <VStack align="start" gap={2} flex="1">
                   <Text fontSize="sm">Gender</Text>
-                  <Input value="Male" />
+                  <Input value={gender} readOnly />
                 </VStack>
               </HStack>
 
               <VStack align="start" gap={2}>
                 <Text fontSize="sm">Contact Number</Text>
-                <Input value="(63) 9123 456 789" />
+                <Input value={contactNumber} readOnly />
               </VStack>
 
               <VStack align="start" gap={2}>
                 <Text fontSize="sm">Address</Text>
-                <Input value="123 Mangga St., Project 8, Quezon City, Philippines" />
+                <Input value={address} readOnly />
               </VStack>
 
               <VStack align="start" gap={2}>
                 <Text fontSize="sm">E-Mail</Text>
-                <Input value="delacruz.Juan.Pedro@gmail.com" />
+                <Input value={email} readOnly />
               </VStack>
 
               <Text fontSize="md" fontWeight="bold">Emergency Contact</Text>
               <VStack align="start" gap={2}>
                 <Text fontSize="sm">Emergency Contact Name</Text>
-                <Input value="Juanna P. Dela Cruz" />
+                <Input value={emergencyContactName} readOnly />
                 <Text fontSize="sm">Relationship with Patient</Text>
-                <Input value="Mother" />
+                <Input value={emergencyRelationship} readOnly />
                 <Text fontSize="sm">Contact Number</Text>
-                <Input value="(63) 9123 456 789" />
+                <Input value={emergencyContactNumber} readOnly />
               </VStack>
             </VStack>
 
@@ -112,21 +132,21 @@ export default function Appointment() {
               <HStack gap={3} align="start" w="full">
                 <VStack align="start" gap={2} flex="2" minW={0}>
                   <Text fontSize="sm">Appointment Date</Text>
-                  <Input w="full" value="October 25, 2025" />
+                  <Input w="full" value={appointmentDate} readOnly />
                 </VStack>
                 <VStack align="start" gap={2} flex="1" minW={0}>
                   <Text fontSize="sm">Start Time</Text>
-                  <Input w="full" value="9:00 am" />
+                  <Input w="full" value={appointmentTime} readOnly />
                 </VStack>
                 <VStack align="start" gap={2} flex="1" minW={0}>
                   <Text fontSize="sm">End Time</Text>
-                  <Input w="full" value="10:00 am" />
+                  <Input w="full" value={appt.endTime ?? ''} readOnly />
                 </VStack>
               </HStack>
 
               <VStack align="start" gap={2}>
                 <Text fontSize="sm">Doctor</Text>
-                <Input value="Dr. Juan Dela Cruz" />
+                <Input value={doctor} readOnly />
               </VStack>
 
               <Text fontWeight="bold">SERVICES</Text>
@@ -134,7 +154,7 @@ export default function Appointment() {
               <Text fontSize="sm" fontWeight="600">Diagnostic and Preventative Services</Text>
               <VStack align="start" gap={3} mt={2}>
                 <HStack as="label" align="start" cursor="pointer" gap={3}>
-                  <input type="checkbox" aria-label="Consultation and Examination" />
+                  <input type="checkbox" aria-label="Consultation and Examination" checked={services.includes('Consultation and Examination')} disabled />
                   <VStack align="start" gap={0}>
                     <Text fontWeight="700">Consultation and Examination</Text>
                     <Text fontSize="sm" color="gray.500">exam, medical history review, discussion of concerns, and treatment planning.</Text>
@@ -142,7 +162,7 @@ export default function Appointment() {
                 </HStack>
 
                 <HStack as="label" align="start" cursor="pointer" gap={3}>
-                  <input type="checkbox" aria-label="Dental cleaning" defaultChecked />
+                  <input type="checkbox" aria-label="Dental cleaning" checked={services.includes('Dental cleaning')} disabled />
                   <VStack align="start" gap={0}>
                     <Text fontWeight="700">Dental cleaning</Text>
                     <Text fontSize="sm" color="gray.500">fluoride treatment professional cleaning (prophy), and polish.</Text>
@@ -150,7 +170,7 @@ export default function Appointment() {
                 </HStack>
 
                 <HStack as="label" align="start" cursor="pointer" gap={3}>
-                  <input type="checkbox" aria-label="Dental x-ray" defaultChecked />
+                  <input type="checkbox" aria-label="Dental x-ray" checked={services.includes('Dental x-ray')} disabled />
                   <VStack align="start" gap={0}>
                     <Text fontWeight="700">Dental x-ray</Text>
                     <Text fontSize="sm" color="gray.500">Images of the crown portions of back teeth to check for decay between teeth.</Text>
@@ -161,7 +181,7 @@ export default function Appointment() {
               <Text fontSize="md" fontWeight="700" mt={4}>Oral Surgery</Text>
               <VStack align="start" gap={3} mt={2}>
                 <HStack as="label" align="start" cursor="pointer" gap={3}>
-                  <input type="checkbox" aria-label="Tooth extraction" />
+                  <input type="checkbox" aria-label="Tooth extraction" checked={services.includes('Tooth extraction')} disabled />
                   <VStack align="start" gap={0}>
                     <Text fontWeight="700">Tooth extraction</Text>
                     <Text fontSize="sm" color="gray.500">Removing a visibly intact tooth.</Text>
@@ -172,7 +192,7 @@ export default function Appointment() {
               <Text fontSize="md" fontWeight="700" mt={4}>Restorative Services</Text>
               <VStack align="start" gap={3} mt={2}>
                 <HStack as="label" align="start" cursor="pointer" gap={3}>
-                  <input type="checkbox" aria-label="Tooth Filling" />
+                  <input type="checkbox" aria-label="Tooth Filling" checked={services.includes('Tooth Filling')} disabled />
                   <VStack align="start" gap={0}>
                     <Text fontWeight="700">Tooth Filling</Text>
                     <Text fontSize="sm" color="gray.500">Tooth-colored filling for front or back teeth.</Text>

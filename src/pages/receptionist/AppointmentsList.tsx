@@ -98,7 +98,7 @@ export default function AppointmentsList() {
           color="blue.500"
           cursor="pointer"
           fontWeight="bold"
-          onClick={() => navigate('/appointments-list/appointment')}
+          onClick={() => navigate('/appointments-list/appointment', { state: appt })}
         >
           View
         </Text>

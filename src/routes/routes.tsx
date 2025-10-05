@@ -6,6 +6,7 @@ import NotFound from "@/pages/NotFound"
 import Receptionist from "@/pages/receptionist/ReceptionistDashboard"
 import AppointmentsList from "@/pages/receptionist/AppointmentsList"
 import FollowUpAppointments from "@/pages/receptionist/FollowUpAppointments"
+import FollowUpAppointment from "@/pages/receptionist/appointment/FollowUpAppointment"
 import CancelRequests from "@/pages/receptionist/CancelRequests"
 import CancelledAppointments from "@/pages/receptionist/appointment/CancelledAppointments"
 
@@ -32,9 +33,9 @@ export default function AppRoutes() {
       <Route 
         path="/dashboard/receptionist" 
         element={
-          //<ProtectedRoute requiredRole="receptionist">
+          <ProtectedRoute requiredRole="receptionist">
             <Receptionist />
-          //</ProtectedRoute>
+          </ProtectedRoute>
         }
       />
 
@@ -51,18 +52,18 @@ export default function AppRoutes() {
       <Route 
         path="/appointments-list" 
         element={
-          //<ProtectedRoute requiredRole="receptionist">
+          <ProtectedRoute requiredRole="receptionist">
             <AppointmentsList />
-          //</ProtectedRoute>
+          </ProtectedRoute>
         }
       />
 
       <Route 
         path="/appointments-list/appointment" 
         element={
-          //<ProtectedRoute requiredRole="receptionist">
+          <ProtectedRoute requiredRole="receptionist">
             <Appointment />
-          //</ProtectedRoute>
+          </ProtectedRoute>
         }
       />
       
@@ -70,9 +71,18 @@ export default function AppRoutes() {
       <Route 
         path="/follow-up" 
         element={
-          //<ProtectedRoute requiredRole="receptionist">
+          <ProtectedRoute requiredRole="receptionist">
             <FollowUpAppointments />
-          //</ProtectedRoute>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route 
+        path="/follow-up/appointment" 
+        element={
+          <ProtectedRoute requiredRole="receptionist">
+            <FollowUpAppointment />
+          </ProtectedRoute>
         }
       />
       
@@ -80,9 +90,9 @@ export default function AppRoutes() {
       <Route 
         path="/cancel-requests" 
         element={
-          //<ProtectedRoute requiredRole="receptionist">
+          <ProtectedRoute requiredRole="receptionist">
             <CancelRequests />
-          //</ProtectedRoute>
+          </ProtectedRoute>
         }
       />
 
@@ -90,9 +100,9 @@ export default function AppRoutes() {
       <Route
         path="/cancel-requests/cancelled-appointments"
         element={
-          //<ProtectedRoute requiredRole="receptionist">
+          <ProtectedRoute requiredRole="receptionist">
             <CancelledAppointments />
-          //</ProtectedRoute>
+          </ProtectedRoute>
         }
       />
       
