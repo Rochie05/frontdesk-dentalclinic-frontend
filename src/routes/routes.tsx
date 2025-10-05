@@ -7,6 +7,7 @@ import Receptionist from "@/pages/receptionist/ReceptionistDashboard"
 import AppointmentsList from "@/pages/receptionist/AppointmentsList"
 import FollowUpAppointments from "@/pages/receptionist/FollowUpAppointments"
 import CancelRequests from "@/pages/receptionist/CancelRequests"
+import CancelledAppointments from "@/pages/receptionist/appointment/CancelledAppointments"
 
 import Appointment from "@/pages/receptionist/appointment/Appointment"
 
@@ -31,7 +32,7 @@ export default function AppRoutes() {
       <Route 
         path="/dashboard/receptionist" 
         element={
-          //<ProtectedRoute requiredRole="receptionists">
+          //<ProtectedRoute requiredRole="receptionist">
             <Receptionist />
           //</ProtectedRoute>
         }
@@ -81,6 +82,16 @@ export default function AppRoutes() {
         element={
           //<ProtectedRoute requiredRole="receptionist">
             <CancelRequests />
+          //</ProtectedRoute>
+        }
+      />
+
+      {/* Cancelled Appointments - accessible by receptionist */}
+      <Route
+        path="/cancel-requests/cancelled-appointments"
+        element={
+          //<ProtectedRoute requiredRole="receptionist">
+            <CancelledAppointments />
           //</ProtectedRoute>
         }
       />

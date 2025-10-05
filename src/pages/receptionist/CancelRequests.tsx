@@ -7,10 +7,12 @@ import { useUser } from '@/contexts/UserContext'
 
 import ReceptionistHeader from '@/components/receptionist/ReceptionistHeader'
 import CashierHeader from '@/components/cashier/CashierHeader'
+import { useNavigate } from 'react-router-dom'
 
 export default function CancelledRequests() {
   const { user } = useUser()
   const isReceptionist = user?.role === 'receptionist'
+  const navigate = useNavigate()
 
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest' | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -92,7 +94,12 @@ export default function CancelledRequests() {
       key: 'action',
       label: 'Action',
       render: (appt) => (
-        <Text color="blue.500" cursor="pointer" fontWeight="bold">
+        <Text
+          color="blue.500"
+          cursor="pointer"
+          fontWeight="bold"
+          onClick={() => navigate('/cancelled-appointments', { state: appt })}
+        >
           View
         </Text>
       ),
