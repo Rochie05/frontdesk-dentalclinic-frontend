@@ -44,7 +44,7 @@ export default function Appointment() {
             {/* Main content */}
             <Flex gap={6}>
             {/* Left Column: Patient Info */}
-            <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4} borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.700', borderColor: 'gray.600' }}>
+            <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4} borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.900', borderColor: 'gray.600' }}>
               <Text fontSize="lg" fontWeight="bold">Patient Information</Text>
               <HStack gap={3}>
                 <VStack align="start" gap={2} flex="1">
@@ -106,7 +106,7 @@ export default function Appointment() {
             </VStack>
 
             {/* Middle Column: Appointment Details */}
-            <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4} borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.700', borderColor: 'gray.600' }}>
+            <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4} borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.900', borderColor: 'gray.600' }}>
               <Text fontSize="lg" fontWeight="bold">Appointment Details & Services</Text>
 
               <HStack gap={3} align="start" w="full">
@@ -184,7 +184,7 @@ export default function Appointment() {
             {/* Right Column: Status & Previous */}
             <Box w={{ base: '100%', md: '320px' }}>
               <VStack align="stretch" gap={6}>
-                <Box bg="white" p={6} borderRadius="md" boxShadow="sm" borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.700', borderColor: 'gray.600', boxShadow: 'none' }}>
+                <Box bg="white" p={6} borderRadius="md" boxShadow="sm" borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.900', borderColor: 'gray.600', boxShadow: 'none' }}>
                   <VStack align="stretch" gap={2}>
                     <Text fontSize="lg" fontWeight="bold">Appointment Status</Text>
                     <Badge colorScheme={statusColorMap[appointmentStatus]} px={3} py={1} borderRadius="full">{appointmentStatus}</Badge>
@@ -215,7 +215,7 @@ export default function Appointment() {
                               w="full"
                               cursor="pointer"
                               _hover={{ bg: 'gray.100' }}
-                              _dark={{ _hover: { bg: 'gray.700' } }}
+                              _dark={{ _hover: { bg: 'gray.900' } }}
                               onClick={() => {
                                 setAppointmentStatus(order as 'Pending' | 'Completed' | 'Cancelled')
                                 setDropdownOpen(false)
@@ -230,7 +230,7 @@ export default function Appointment() {
                   </VStack>
                 </Box>
 
-                <Box bg="white" p={6} borderRadius="md" boxShadow="sm" borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.700', borderColor: 'gray.600', boxShadow: 'none' }}>
+                <Box bg="white" p={6} borderRadius="md" boxShadow="sm" borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.900', borderColor: 'gray.600', boxShadow: 'none' }}>
                   <VStack align="stretch" gap={2}>
                     <Text fontSize="lg" fontWeight="bold">Previous Appointments</Text>
                     <Text fontSize="sm">AppointmentID#00000 - Juan P. Dela Cruz - 05/09/25</Text>
