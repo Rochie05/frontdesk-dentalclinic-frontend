@@ -1,7 +1,6 @@
-
-import { Flex, Box, VStack, HStack, Text, Input, Badge } from '@chakra-ui/react'
-import { Checkbox } from '@chakra-ui/react'
-import { Select } from '@chakra-ui/react'
+import { Flex, Box, VStack, HStack, Text, Input, Badge, Button } from '@chakra-ui/react'
+// removed unused ComponentType import
+import { useState, useRef, useEffect } from 'react'
 import Sidebar from '@/components/dashboard/Sidebar'
 import CashierHeader from '@/components/cashier/CashierHeader'
 import ReceptionistHeader from '@/components/receptionist/ReceptionistHeader'
@@ -11,24 +10,41 @@ export default function Appointment() {
   const { user } = useUser()
   const isReceptionist = user?.role === 'receptionist'
 
+  // Replace Select with custom dropdown
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [appointmentStatus, setAppointmentStatus] = useState<'Pending' | 'Completed' | 'Cancelled'>('Pending')
+  // Keep mapping consistent with AppointmentsList
+  const statusColorMap: Record<string, string> = { Pending: 'green', Completed: 'gray', Cancelled: 'red' }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   return (
     <Flex h="100vh" overflow="hidden">
       <Sidebar />
 
-      <Box flex="1" overflow="auto" bg="bg.muted" p={6}>
-        <VStack align="stretch" gap={4}>
+      <Box flex="1" overflow="auto" bg="bg.muted">
+        <VStack align="stretch" gap={0} h="full">
           {/* Header */}
-          <Box position="sticky" top={0} zIndex={10} bg="bg.muted" p={4}>
+          <Box position="sticky" top={0} zIndex={10}>
             {isReceptionist ? <ReceptionistHeader /> : <CashierHeader />}
           </Box>
 
-          {/* Breadcrumb */}
-          <Text fontSize="sm" color="gray.500">Pages / Appointments List / AppointmentID#00001</Text>
+          <Box p={6} flex="1">
+            {/* Breadcrumb */}
 
-          {/* Main content */}
-          <Flex gap={6}>
+            {/* Main content */}
+            <Flex gap={6}>
             {/* Left Column: Patient Info */}
-            <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4}>
+            <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4} borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.700', borderColor: 'gray.600' }}>
               <Text fontSize="lg" fontWeight="bold">Patient Information</Text>
               <HStack gap={3}>
                 <VStack align="start" gap={2} flex="1">
@@ -90,21 +106,21 @@ export default function Appointment() {
             </VStack>
 
             {/* Middle Column: Appointment Details */}
-            <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4}>
+            <VStack flex="1" bg="white" p={6} borderRadius="md" align="stretch" gap={4} borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.700', borderColor: 'gray.600' }}>
               <Text fontSize="lg" fontWeight="bold">Appointment Details & Services</Text>
 
-              <HStack gap={3}>
-                <VStack align="start" gap={2} flex="1">
+              <HStack gap={3} align="start" w="full">
+                <VStack align="start" gap={2} flex="2" minW={0}>
                   <Text fontSize="sm">Appointment Date</Text>
-                  <Input value="October 25, 2025" />
+                  <Input w="full" value="October 25, 2025" />
                 </VStack>
-                <VStack align="start" gap={2} flex="1">
+                <VStack align="start" gap={2} flex="1" minW={0}>
                   <Text fontSize="sm">Start Time</Text>
-                  <Input value="9:00 am" />
+                  <Input w="full" value="9:00 am" />
                 </VStack>
-                <VStack align="start" gap={2} flex="1">
+                <VStack align="start" gap={2} flex="1" minW={0}>
                   <Text fontSize="sm">End Time</Text>
-                  <Input value="10:00 am" />
+                  <Input w="full" value="10:00 am" />
                 </VStack>
               </HStack>
 
@@ -114,33 +130,116 @@ export default function Appointment() {
               </VStack>
 
               <Text fontWeight="bold">SERVICES</Text>
-              <VStack align="start" gap={1}>
-                <Checkbox>Consultation and Examination</Checkbox>
-                <Checkbox isChecked>Dental cleaning</Checkbox>
-                <Checkbox isChecked>Dental x-ray</Checkbox>
-                <Checkbox>Tooth extraction</Checkbox>
-                <Checkbox>Tooth Filling</Checkbox>
+
+              <Text fontSize="sm" fontWeight="600">Diagnostic and Preventative Services</Text>
+              <VStack align="start" gap={3} mt={2}>
+                <HStack as="label" align="start" cursor="pointer" gap={3}>
+                  <input type="checkbox" aria-label="Consultation and Examination" />
+                  <VStack align="start" gap={0}>
+                    <Text fontWeight="700">Consultation and Examination</Text>
+                    <Text fontSize="sm" color="gray.500">exam, medical history review, discussion of concerns, and treatment planning.</Text>
+                  </VStack>
+                </HStack>
+
+                <HStack as="label" align="start" cursor="pointer" gap={3}>
+                  <input type="checkbox" aria-label="Dental cleaning" defaultChecked />
+                  <VStack align="start" gap={0}>
+                    <Text fontWeight="700">Dental cleaning</Text>
+                    <Text fontSize="sm" color="gray.500">fluoride treatment professional cleaning (prophy), and polish.</Text>
+                  </VStack>
+                </HStack>
+
+                <HStack as="label" align="start" cursor="pointer" gap={3}>
+                  <input type="checkbox" aria-label="Dental x-ray" defaultChecked />
+                  <VStack align="start" gap={0}>
+                    <Text fontWeight="700">Dental x-ray</Text>
+                    <Text fontSize="sm" color="gray.500">Images of the crown portions of back teeth to check for decay between teeth.</Text>
+                  </VStack>
+                </HStack>
+              </VStack>
+
+              <Text fontSize="md" fontWeight="700" mt={4}>Oral Surgery</Text>
+              <VStack align="start" gap={3} mt={2}>
+                <HStack as="label" align="start" cursor="pointer" gap={3}>
+                  <input type="checkbox" aria-label="Tooth extraction" />
+                  <VStack align="start" gap={0}>
+                    <Text fontWeight="700">Tooth extraction</Text>
+                    <Text fontSize="sm" color="gray.500">Removing a visibly intact tooth.</Text>
+                  </VStack>
+                </HStack>
+              </VStack>
+
+              <Text fontSize="md" fontWeight="700" mt={4}>Restorative Services</Text>
+              <VStack align="start" gap={3} mt={2}>
+                <HStack as="label" align="start" cursor="pointer" gap={3}>
+                  <input type="checkbox" aria-label="Tooth Filling" />
+                  <VStack align="start" gap={0}>
+                    <Text fontWeight="700">Tooth Filling</Text>
+                    <Text fontSize="sm" color="gray.500">Tooth-colored filling for front or back teeth.</Text>
+                  </VStack>
+                </HStack>
               </VStack>
             </VStack>
 
             {/* Right Column: Status & Previous */}
-            <VStack flex="0.5" bg="white" p={6} borderRadius="md" align="stretch" gap={6}>
-              <VStack align="stretch" gap={2}>
-                <Text fontSize="lg" fontWeight="bold">Appointment Status</Text>
-                <Badge colorScheme="green" px={3} py={1} borderRadius="full">Pending</Badge>
-                <Select placeholder="Change Appointment Status">
-                  <option>Pending</option>
-                  <option>Completed</option>
-                  <option>Cancelled</option>
-                </Select>
-              </VStack>
+            <Box w={{ base: '100%', md: '320px' }}>
+              <VStack align="stretch" gap={6}>
+                <Box bg="white" p={6} borderRadius="md" boxShadow="sm" borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.700', borderColor: 'gray.600', boxShadow: 'none' }}>
+                  <VStack align="stretch" gap={2}>
+                    <Text fontSize="lg" fontWeight="bold">Appointment Status</Text>
+                    <Badge colorScheme={statusColorMap[appointmentStatus]} px={3} py={1} borderRadius="full">{appointmentStatus}</Badge>
+                    <Box ref={dropdownRef} display="inline-block" position="relative">
+                      <Button size="sm" bg="white" color="black" border="1px solid gray" onClick={() => setDropdownOpen(!dropdownOpen)} _dark={{ bg: 'gray.600', color: 'white', borderColor: 'gray.500' }}>
+                        {appointmentStatus} ▼
+                      </Button>
 
-              <VStack align="stretch" gap={2}>
-                <Text fontSize="lg" fontWeight="bold">Previous Appointments</Text>
-                <Text fontSize="sm">AppointmentID#00000 - Juan P. Dela Cruz - 05/09/25</Text>
+                      {dropdownOpen && (
+                        <VStack
+                          position="absolute"
+                          top="calc(100% + 6px)"
+                          left={0}
+                          bg="white"
+                          border="1px solid #ccc"
+                          borderRadius="md"
+                          shadow="md"
+                          w="160px"
+                          align="stretch"
+                          zIndex={30}
+                          _dark={{ bg: 'gray.600', borderColor: 'gray.500' }}
+                        >
+                          {['Pending', 'Completed', 'Cancelled'].map((order) => (
+                            <Box
+                              key={order}
+                              px={3}
+                              py={2}
+                              w="full"
+                              cursor="pointer"
+                              _hover={{ bg: 'gray.100' }}
+                              _dark={{ _hover: { bg: 'gray.700' } }}
+                              onClick={() => {
+                                setAppointmentStatus(order as 'Pending' | 'Completed' | 'Cancelled')
+                                setDropdownOpen(false)
+                              }}
+                            >
+                              {order}
+                            </Box>
+                          ))}
+                        </VStack>
+                      )}
+                    </Box>
+                  </VStack>
+                </Box>
+
+                <Box bg="white" p={6} borderRadius="md" boxShadow="sm" borderWidth="1px" borderColor="gray.50" _dark={{ bg: 'gray.700', borderColor: 'gray.600', boxShadow: 'none' }}>
+                  <VStack align="stretch" gap={2}>
+                    <Text fontSize="lg" fontWeight="bold">Previous Appointments</Text>
+                    <Text fontSize="sm">AppointmentID#00000 - Juan P. Dela Cruz - 05/09/25</Text>
+                  </VStack>
+                </Box>
               </VStack>
-            </VStack>
+            </Box>
           </Flex>
+        </Box>
         </VStack>
       </Box>
     </Flex>
