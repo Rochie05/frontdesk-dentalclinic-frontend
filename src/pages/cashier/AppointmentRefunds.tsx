@@ -1,4 +1,4 @@
-import { Flex, Box, Text } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 import Sidebar from '@/components/dashboard/Sidebar'
 import CashierHeader from '@/components/cashier/CashierHeader'
 import AppointmentrRefundsTable from '@/components/cashier/AppointmentsRefundsTable'
