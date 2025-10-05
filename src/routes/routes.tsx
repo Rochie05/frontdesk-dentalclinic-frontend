@@ -8,6 +8,7 @@ import AppointmentsList from "@/pages/receptionist/AppointmentsList"
 import FollowUpAppointments from "@/pages/receptionist/FollowUpAppointments"
 import CancelRequests from "@/pages/receptionist/CancelRequests"
 
+import Appointment from "@/pages/receptionist/appointment/Appointment"
 
 import Cashier from "@/pages/cashier/CashierDashboard"
 import PaymentsList from "@/pages/cashier/PaymentsList"
@@ -30,11 +31,12 @@ export default function AppRoutes() {
       <Route 
         path="/dashboard/receptionist" 
         element={
-          <ProtectedRoute requiredRole="receptionist">
+          //<ProtectedRoute requiredRole="receptionists">
             <Receptionist />
-          </ProtectedRoute>
+          //</ProtectedRoute>
         }
       />
+
       <Route 
         path="/dashboard/cashier" 
         element={
@@ -48,9 +50,18 @@ export default function AppRoutes() {
       <Route 
         path="/appointments-list" 
         element={
-          <ProtectedRoute requiredRole="receptionist">
+          //<ProtectedRoute requiredRole="receptionist">
             <AppointmentsList />
-          </ProtectedRoute>
+          //</ProtectedRoute>
+        }
+      />
+
+      <Route 
+        path="/appointments-list/appointment" 
+        element={
+          //<ProtectedRoute requiredRole="receptionist">
+            <Appointment />
+          //</ProtectedRoute>
         }
       />
       
@@ -58,9 +69,9 @@ export default function AppRoutes() {
       <Route 
         path="/follow-up" 
         element={
-          <ProtectedRoute requiredRole="receptionist">
+          //<ProtectedRoute requiredRole="receptionist">
             <FollowUpAppointments />
-          </ProtectedRoute>
+          //</ProtectedRoute>
         }
       />
       
@@ -68,9 +79,9 @@ export default function AppRoutes() {
       <Route 
         path="/cancel-requests" 
         element={
-          <ProtectedRoute requiredRole="receptionist">
+          //<ProtectedRoute requiredRole="receptionist">
             <CancelRequests />
-          </ProtectedRoute>
+          //</ProtectedRoute>
         }
       />
       
