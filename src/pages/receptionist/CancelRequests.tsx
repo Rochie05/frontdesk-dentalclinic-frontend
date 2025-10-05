@@ -98,7 +98,7 @@ export default function CancelledRequests() {
           color="blue.500"
           cursor="pointer"
           fontWeight="bold"
-          onClick={() => navigate('/cancelled-appointments', { state: appt })}
+          onClick={() => navigate('/cancel-requests/cancelled-appointments', { state: appt })}
         >
           View
         </Text>
